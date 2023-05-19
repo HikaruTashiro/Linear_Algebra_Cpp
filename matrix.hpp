@@ -12,15 +12,17 @@ namespace math
     template<class Type, int row, int col>
     class matrix
     {
-        public:
+        protected:
             vector<Type, col> table[row];
 
+        public:
             matrix<Type, row, col>() = default;
             matrix<Type, row, col>(std::initializer_list<Type[col]> initializer);
             inline vec<Type, col>& operator[](int i);
-            matrix<Type, col, row> transpose();
-            matrix<Type, row, col> operator+(matrix<Type, row, col> &m);
+            matrix<Type, col, row> transpose(); matrix<Type, row, col> operator+(matrix<Type, row, col> &m);
             matrix<Type, row, col> operator-(matrix<Type, row, col> &m);
+            template<class T, int r, int c>
+            friend matrix<T, r, c> operator*(T scaler, matrix<T, r, c> &mat);
             template<class T, int r, int c>
             friend std::ostream& operator<<(std::ostream& stream, matrix<T, r, c> &m);
     };
@@ -69,6 +71,16 @@ namespace math
         for (int i = 0; i < row; i++)
             std::transform(table[i].begin(), table[i].end(), m.table[i].begin(), m_ret.table[i].begin(), std::minus<Type>());
         return m_ret;
+    }
+
+    template<class T, int r, int c>
+    matrix<T, r, c> operator*(T scaler, matrix<T, r, c> &mat)
+    {
+        matrix<T, r, c> m_res;
+        for (auto iter = mat.table, iter_res = m_res.table; iter != mat.table + r; iter++, iter_res++)
+            std::transform(iter->begin(), iter->end(), iter_res->begin(), std::bind(std::multiplies<T>(), std::placeholders::_1, scaler));
+
+        return m_res;
     }
 
     template<class T, int r, int c>

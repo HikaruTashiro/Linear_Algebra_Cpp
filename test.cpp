@@ -41,6 +41,7 @@ int main()
 
     std::cout << "m1 + m2:\n" << (res = m1 + m2) << '\n';
     std::cout << "m1 - m2:\n" << (res = m1 - m2) << '\n';
+    std::cout << "3.5 * m1:\n" << (res = 3.5f * m1) << '\n';
     
     return 0;
 }
